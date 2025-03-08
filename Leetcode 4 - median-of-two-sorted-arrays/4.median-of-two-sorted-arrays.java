@@ -8,36 +8,39 @@
 class Solution {
 
   public double findMedianSortedArrays(int[] nums1, int[] nums2) {
-    int[] merged = new int[nums1.length + nums2.length];
-    int i = 0, j = 0, k = 0;
+    // Make sure nums1 is shorter than nums2
+    if (nums1.length > nums2.length) {
+      int[] temp = nums1;
+      nums1 = nums2;
+      nums2 = temp;
+    }
 
-    // Merge the two sorted arrays
-    while (i < nums1.length && j < nums2.length) {
-      if (nums1[i] <= nums2[j]) {
-        merged[k++] = nums1[i++];
+    int totalLen = nums1.length + nums2.length;
+    int half = (totalLen + 1) / 2;
+    int left = 0, right = nums1.length;
+
+    while (left <= right) {
+      int mid1 = (right + left) / 2;
+      int mid2 = half - mid1;
+
+      int left1 = mid1 > 0 ? nums1[mid1 - 1] : Integer.MIN_VALUE;
+      int right1 = mid1 < nums1.length ? nums1[mid1] : Integer.MAX_VALUE;
+      int left2 = mid2 > 0 ? nums2[mid2 - 1] : Integer.MIN_VALUE;
+      int right2 = mid2 < nums2.length ? nums2[mid2] : Integer.MAX_VALUE;
+
+      if (left1 <= right2 && left2 <= right1) {
+        if (totalLen % 2 != 0) {
+          return Math.max(left1, left2);
+        }
+        return (Math.max(left1, left2) + Math.min(right1, right2)) / 2.0;
+      } else if (left1 > right2) {
+        right = left - 1;
       } else {
-        merged[k++] = nums2[j++];
+        left = left + 1;
       }
     }
 
-    // Copy remaining elements from nums1
-    while (i < nums1.length) {
-      merged[k++] = nums1[i++];
-    }
-
-    // Copy remaining elements from nums2
-    while (j < nums2.length) {
-      merged[k++] = nums2[j++];
-    }
-
-    int mid = merged.length / 2;
-
-    // If length is even, average the two middle elements
-    if (merged.length % 2 == 0) {
-      return ((double) merged[mid - 1] + merged[mid]) / 2;
-    }
-    // If length is odd, return middle element
-    return merged[mid];
+    return -1;
   }
 
   public static void main(String[] args) {
