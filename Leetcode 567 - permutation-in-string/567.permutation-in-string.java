@@ -6,36 +6,45 @@
 
 // @lc code=start
 
-import java.util.HashMap;
-import java.util.Map;
-
 class Solution {
 
   public boolean checkInclusion(String s1, String s2) {
-    // Put each letters from s1 in to a map
-    Map<Character, Integer> s1Letters = new HashMap<>();
+    if (s1.length() > s2.length()) return false;
+
+    int[] letters = new int[26];
+
+    // Count the letters in s1
     for (int i = 0; i < s1.length(); i++) {
-      s1Letters.put(s1.charAt(i), s1Letters.getOrDefault(s1.charAt(i), 0) + 1);
+      letters[s1.charAt(i) - 'a']++;
     }
 
-    int left = 0, right = s1.length() - 1;
+    int left = 0, right = 0;
 
+    // Slide the window
     while (right < s2.length()) {
-      // Put each letters from s1 in to a map
-      Map<Character, Integer> s2Letters = new HashMap<>();
-      for (int i = left; i <= right; i++) {
-        s2Letters.put(
-          s2.charAt(i),
-          s2Letters.getOrDefault(s2.charAt(i), 0) + 1
-        );
+      // Remove the letter from the counter
+      letters[s2.charAt(right) - 'a']--;
+
+      // If the window size is the same as s1, check if all letters are 0
+      if (right - left + 1 == s1.length()) {
+        boolean allZero = true;
+        for (int count : letters) {
+          if (count != 0) {
+            allZero = false;
+            break;
+          }
+        }
+
+        // If all letters are 0, return true
+        if (allZero) {
+          return true;
+        }
+
+        // Add the letter back to the counter
+        letters[s2.charAt(left) - 'a']++;
+        left++;
       }
 
-      // Compare two map
-      if (s1Letters.equals(s2Letters)) {
-        return true;
-      }
-
-      left++;
       right++;
     }
 
