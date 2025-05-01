@@ -27,13 +27,11 @@ class Solution {
     List<Integer> subset
   ) {
     if (target == 0) {
-      if (!result.contains(subset)) {
-        result.add(new ArrayList<>(subset));
-        return;
-      }
+      result.add(new ArrayList<>(subset));
+      return;
     }
 
-    if (target < 0 && start > candidates.length) {
+    if (target < 0 || start >= candidates.length) {
       return;
     }
 
@@ -43,8 +41,8 @@ class Solution {
         continue;
       }
 
-      subset.add(candidates[start]);
-      backtrack(candidates, start + 1, target - candidates[start], subset);
+      subset.add(candidates[i]);
+      backtrack(candidates, i + 1, target - candidates[i], subset);
       subset.remove(subset.size() - 1);
     }
   }
