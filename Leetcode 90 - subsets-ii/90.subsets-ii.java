@@ -24,6 +24,7 @@ class Solution {
     result.add(new ArrayList<>(subset));
 
     for (int i = start; i < nums.length; i++) {
+      // skip duplicates
       if (i > start && nums[i] == nums[i - 1]) {
         continue;
       }
